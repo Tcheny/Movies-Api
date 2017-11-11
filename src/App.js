@@ -1,44 +1,32 @@
 import React, { Component } from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import logo from './logo.svg';
 import './App.css';
-import Display from './Display';
 
+import Display from './Display';
+import Input from './Input';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputMovie : ''
+      movies : ''
     };
   }
 
-
-  handleChange = (e) => {
+  queryTitle = (query) => {
     this.setState({
-      inputMovie : e.target.value
+      movies : query
     });
   }
-
-  handleClick = (e) => {
-    e.preventDefault();
-    this.setState({
-      inputMovie: ''
-    })
-  }
-
 
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <form>
-          <input type="text" onChange={this.handleChange} value={this.state.inputMovie}/>
-          {/* <button onClick={this.handleClick}>movie</button> */}
-        </form>
-        <Display movie={this.state.inputMovie} />
+        <MuiThemeProvider>
+          <Input queryTitle={this.queryTitle}/>
+          <Display movies={this.state.movies} />
+        </MuiThemeProvider>
       </div>
     );
   }

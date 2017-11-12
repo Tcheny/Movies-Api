@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import request from 'request';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 class Display extends Component {
   constructor(props) {
@@ -18,7 +19,6 @@ class Display extends Component {
       this.setState({
         data : query.results
       });
-      console.log(this.state.data);
     });
   }
 
@@ -34,34 +34,45 @@ class Display extends Component {
   };
 
   render() {
-    let image = 'https://image.tmdb.org/t/p/w500'
+    const image = 'https://image.tmdb.org/t/p/w500';
+    const actions = [
+      <FlatButton
+        label="Fermer"
+        primary={true}
+        onClick={this.handleClose}
+      />
+    ]
     return (
       <div>
         {this.state.data &&
           this.state.data.map((movie,index)=>{
             return (
-              <div>
-                <li key={index}>
-                  <a onClick={() => this.handleOpen(index)}>{movie.title} ({movie.release_date && movie.release_date.substring(0,4)})</a>
-                </li>
-                <Dialog
-                  modal={false}
-                  open={this.state.open}
-                  onRequestClose={this.handleClose}
-                  autoScrollBodyContent={true}
+              <div className="button-list">
+                <button className='button' onClick={() => this.handleOpen(index)}>
+                  <img className='button-img' src={`${image}${movie.poster_path}`} alt="no poster"/>
+                  <h3 className='button-title'>{movie.title}</h3>
+                  ({movie.release_date && movie.release_date.substring(0,4)})
+                </button>
 
-                >
-                  {this.state.movie &&
+                {this.state.movie &&
+                  <Dialog
+                    title={this.state.movie.title}
+                    actions={actions}
+                    modal={false}
+                    open={this.state.open}
+                    onRequestClose={this.handleClose}
+                    autoScrollBodyContent={true}
+                  >
                     <div className="modal">
-                      <h1>{this.state.movie.original_title}</h1>
+                      <h1>Titre original : {this.state.movie.original_title}</h1>
                       <p>Date de sortie {this.state.movie.release_date && this.state.movie.release_date.replace(/[-]/g, '/').split('/').reverse('').join('/')}</p>
                       <img className='poster' src={`${image}${this.state.movie.poster_path}`} alt=""/>
-                      {this.state.movie.overview === "" ? '': <div><h3>SYNOPSIS ET DÉTAILS  </h3> <p>{this.state.movie.overview}</p></div> }
+                      {this.state.movie.overview === "" ? '': <div className="overview"><h3>SYNOPSIS ET DÉTAILS  </h3> <p>{this.state.movie.overview}</p></div> }
                       <img src={`${image}${this.state.movie.backdrop_path}`} alt=""/>
-                      <p>{this.state.movie.vote_average}</p>
+                      <p>Note : {this.state.movie.vote_average}/10</p>
                     </div>
-                  }
-                </Dialog>
+                  </Dialog>
+                }
               </div>
             )
           })

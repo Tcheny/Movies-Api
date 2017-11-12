@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import logo from './logo.svg';
 import './App.css';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+
 import Display from './Display';
-import Input from './Input';
 
 class App extends Component {
   constructor(props) {
@@ -14,17 +15,31 @@ class App extends Component {
     };
   }
 
-  queryTitle = (query) => {
+  handleChange = (e) => {
     this.setState({
-      movies : query
+      movies : e.target.value
+    });
+  }
+
+  handleClick = (e) => {
+    e.preventDefault();
+
+    this.setState({
+      inputTitle : ''
     });
   }
 
   render() {
     return (
       <div className="App">
+        <h1>Qu'est ce qu'on cherche aujourd'hui ?</h1>
         <MuiThemeProvider>
-          <Input queryTitle={this.queryTitle}/>
+          <form>
+            <TextField
+              hintText="Rechercher un film"
+              type="text" onChange={this.handleChange} value={this.state.movies}/>
+            <button className='button-search' onClick={this.handleClick}>Rechercher</button>
+          </form>
           <Display movies={this.state.movies} />
         </MuiThemeProvider>
       </div>
